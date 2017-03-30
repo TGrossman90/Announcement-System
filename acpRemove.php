@@ -9,6 +9,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>ACP: Add Authed Users</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="styles2.css" type="text/css" />
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
 	</head>  
 	<body>  
 		<div id="main">
@@ -35,7 +37,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 		<h3>WARNING: This will permanently delete selected accounts!</h3></center>
 		<form method="post" action="deauth.php" name="deauthStudents" onsubmit="return confirm('Do you really want to submit the form for the selected users? This action cannot be undone!');">
 			<fieldset>
-			<select name="usersToRemove[]" size="20" style="width:95%" multiple>
+			<select name="usersToRemove[]" size="20" style="width:90%" multiple>
 			
 			<?php
 			
@@ -66,7 +68,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 		<h3>WARNING: This will permanently delete selected accounts!</h3></center>
 		<form method="post" action="deauth.php" name="deauthFacAdmin" onsubmit="return confirm('Do you really want to submit the form for the selected users? This action cannot be undone!');">
 			<fieldset>
-			<select name="usersToRemove[]" size="20" style="width:95%" multiple>
+			<select name="usersToRemove[]" size="20" style="width:90%" multiple>
 			
 			<?php
 			

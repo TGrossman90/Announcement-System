@@ -9,12 +9,14 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>UMSL MUSIC</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="styles2.css" type="text/css" />
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
 	</head>  
 	<body>  
 		<div id="main">
 		
 		<?php
-		
+			
 			// Includes
 			include "functions.php";
 			include "dbcontroller.php";
@@ -31,7 +33,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				// Check for announcements and print the main menu
 				$username = processText($_SESSION['username']);
 				$result = mysqli_query($conn, "SELECT announcement FROM announcements WHERE username='$username'") or die(mysqli_error($conn));
-				$announcements = mysqli_fetch_array($result, MYSQLI_NUM);
+				
 				$count = mysqli_num_rows($result);
 				mysqli_free_result($result);
 				
@@ -52,7 +54,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				$username = processText($_POST['username']);
 				$password = processText($_POST['password']);
 				$result = mysqli_query($conn, "SELECT password, userLevel FROM users WHERE username = '$username'") or die(mysqli_error($conn));
-				$row = mysqli_fetch_array($result);
+				$row = mysqli_fetch_row($result);
 				$hash = $row[0];
 				$userLevel = $row[1];
 				
@@ -64,6 +66,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				} else {
 					if(password_verify($password, $hash)) {
 						echo "Successfully logged in";
+						
 						$_SESSION['loggedin'] = 1;
 						$_SESSION['username'] = $username;
 						$_SESSION['permissions'] = $userLevel;

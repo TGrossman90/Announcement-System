@@ -7,8 +7,10 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 <!DOCTYPE HTML> 
 <html>  
 	<head>  
-		<title>UMSL MUSIC: Create Announcement</title>
+		<title>UMSL Music: Create Announcement</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="styles2.css" type="text/css" />
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
 	</head>  
 	<body>  
 		<div id="main">
@@ -54,7 +56,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 		
 		<!-- Javascript to update on screen the number of characters remaining in the textarea -->
 		<script>
-			var maxchar = 255;
+			var maxchar = 254;
 			var box = document.getElementById("announcement");
 			var counter = document.getElementById("count");
 			counter.innerHTML = maxchar;

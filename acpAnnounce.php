@@ -9,6 +9,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>UMSL MUSIC: Create Announcement</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="styles2.css" type="text/css" />
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
 	</head>  
 	<body>  
 		<div id="main">
@@ -35,7 +37,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				<p>Send to Faculty and Administrators:</p>
 				<label for="subject">Subject: </label> <input type="text" name="subject" maxlength="31"> <br />
 				<p>Announcement (Max: 254 characters):</p>
-				<textarea maxlength="254" placeholder="...announcement text goes here..." id="announcement" name="announcement" cols="40" rows="5"></textarea><br />
+				<textarea maxlength="254" placeholder="...announcement text goes here..." id="announcement" name="announcement" cols="25" rows="5"></textarea><br />
 				Remaining characters: <span id="count"></span><br /><br />
 				<input type="submit" name="acpAnnounceSubmit" value="Submit" />&nbsp;<a href="acp.php" class="button">Cancel</a>
 			</fieldset>

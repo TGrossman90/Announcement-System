@@ -5,13 +5,13 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 -->
 
 <?php
-
+	
 	session_start();
 	
-	$dbhost = "";
-	$dbuser = "";
-	$dbpass = "";
-	$db = "";
+	$dbhost = "localhost";
+	$dbuser = "umslmusic";
+	$dbpass = "cs4500groupproject";
+	$db = "umsl_musicdept";
 	
 	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $db);
 	if(mysqli_connect_errno()) {

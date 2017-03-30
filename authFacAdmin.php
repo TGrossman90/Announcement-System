@@ -9,6 +9,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>ACP: Adding Users</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="styles2.css" type="text/css" />
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
 	</head>  
 	<body>  
 		<div id="main">

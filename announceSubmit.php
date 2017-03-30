@@ -9,6 +9,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>UMSL MUSIC: Submit Announcement</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
+		<link rel="stylesheet" href="styles2.css" type="text/css" />
+		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
 	</head>  
 	<body>  
 		<div id="main">
@@ -34,7 +36,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 						foreach($groups as $group) {	
 						
 							$result = mysqli_query($conn, "SELECT username FROM $group") or die(mysqli_error($conn));
-							while(($array = mysqli_fetch_array($result, MYSQLI_NUM))) {
+							while($array = mysqli_fetch_row($result)) {
 								$username = $array[0];
 								$query = mysqli_query($conn, "INSERT INTO announcements (id, username, priority, subject, author, announcement) VALUES ('NULL', '$username', '$priority', '$subject', '$author', '$announcement')") or die(mysqli_error($conn));
 							}
