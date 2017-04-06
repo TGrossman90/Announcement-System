@@ -5,7 +5,6 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 -->
 
 <?php
-	
 	session_start();
 	
 	$dbhost = "";
