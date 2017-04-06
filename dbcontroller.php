@@ -1,0 +1,21 @@
+<!-- 
+dbcontroller.php
+Created by Tom Grossman on 3/24/2017
+Copyright © 2017 Tom Grossman. All Rights Reserved
+-->
+
+<?php
+	
+	session_start();
+	
+	$dbhost = "";
+	$dbuser = "";
+	$dbpass = "";
+	$db = "";
+	
+	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $db);
+	if(mysqli_connect_errno()) {
+		die("Connection Failed: " . mysqli_connect_error());
+	}
+	
+?>
