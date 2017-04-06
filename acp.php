@@ -29,6 +29,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				if($_SESSION['permissions'] == 100) {
 					echo '<a href="acpAdd.php">Add Authorized Accounts</a><br />';
 					echo '<a href="acpRemove.php">Remove Authorized Accounts</a><br />';
+					echo '<a href="addGroup.php">Add a Group</a><br />';
+					echo '<a href="removeGroup.php">Remove a Group</a><br />';
 				}
 				
 				// Show links for faculty

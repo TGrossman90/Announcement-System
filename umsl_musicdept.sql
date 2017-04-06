@@ -1,7 +1,7 @@
 --
---umsl_musicdept.sql
---Created by Tom Grossman on 3/24/2017
---Copyright © 2017 Tom Grossman. All Rights Reserved
+-- umsl_musicdept.sql
+-- Created by Tom Grossman on 3/24/2017
+-- Copyright © 2017 Tom Grossman. All Rights Reserved
 --
 
 -- Server version: 5.5.54-0+deb8u1
@@ -20,11 +20,25 @@ USE `umsl_musicdept`;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `groups`
+--
+
+CREATE TABLE IF NOT EXISTS `groups` (
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`groupName` varchar(32) NOT NULL,
+	`groupParent` varchar(32)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `groups` (`groupName`) VALUES (".None");
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `stringGroup`
 --
 
 CREATE TABLE IF NOT EXISTS `stringGroup` (
-	`id` int(11) NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -35,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `stringGroup` (
 --
 
 CREATE TABLE IF NOT EXISTS `windsPercussionGroup` (
-	`id` int(11) NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -46,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `windsPercussionGroup` (
 --
 
 CREATE TABLE IF NOT EXISTS `vocalGroup` (
-	`id` int(11) NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -57,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `vocalGroup` (
 --
 
 CREATE TABLE IF NOT EXISTS `departmentWideGroup` (
-	`id` int(11) NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -68,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `departmentWideGroup` (
 --
 
 CREATE TABLE IF NOT EXISTS `musicEdGroup` (
-	`id` int(11) NOT NULL  PRIMARY KEY AUTO_INCREMENT,
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

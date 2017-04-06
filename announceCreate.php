@@ -15,40 +15,51 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<body>  
 		<div id="main">
 		
-		<?php
-		
-			// Includes
-			include "functions.php";
-			include "dbcontroller.php";
-			
-			// Check if you're supposed to be here
-			if((! $_SESSION['loggedin'] == 1) && (! $_SESSION['permissions'] >= 50)) {
-				echo "You do not have permission to be here!";
-				sleep(1);
-				header("location:index.php");
-			}
-			
-		?>
-		
 		<!-- This form is for creating announcements that can be sent to specific user groups or 
 		all users. -->
 		
 		<form method="post" action="announceSubmit.php" name="announceForm">
 			<fieldset>
 				<p>Send to Group(s):</p>
-				<input type="checkbox" name="groups[]" value="windsPercussionGroup"> Winds/Percussion <br />
-				<input type="checkbox" name="groups[]" value="vocalGroup"> Vocal <br />
-				<input type="checkbox" name="groups[]" value="stringGroup"> Strings <br />
-				<input type="checkbox" name="groups[]" value="musicEdGroup"> Music Ed <br />
-				<input type="checkbox" name="groups[]" value="departmentWideGroup"> All <br /> <br />
+				<?php
+				
+					//Includes
+					include "functions.php";
+					include "dbcontroller.php";
+					
+					// Check if you're supposed to be here
+					if((! $_SESSION['loggedin'] == 1) && (! $_SESSION['permissions'] >= 50)) {
+						echo "You do not have permission to be here!";
+						header("location:index.php");
+					}
+					
+						// Get all groups
+						$result = mysqli_query($conn, "SELECT groupName FROM groups") or die(mysqli_error($conn));
+					
+						$groups = array();
+						while($group = mysqli_fetch_row($result)) {
+							array_push($groups, $group[0]);
+						}
+						sort($groups);
+						
+						// Create an option with every group name 
+						foreach($groups as $name) {
+							if($name != ".None") {
+								echo '<input type="checkbox" name="groups[]" value="'. $name .'">'. $name . '<br />';
+							}
+						}
+						
+					?>
+				<br />
 				<label for="subject">Priority: </label>
 				<select name="priority" id="priority">
 					<option value="Normal">Normal</option>
 					<option value="Urgent">Urgent</option>
 				</select> <br /><br />
+
 				<label for="subject">Subject: </label> <input type="text" name="subject" maxlength="31"> <br />
 				<p>Announcement (Max: 254 characters):</p>
-				<textarea maxlength="254" placeholder="...announcement text goes here..." id="announcement" name="announcement" cols="40" rows="5"></textarea><br />
+				<textarea maxlength="254" placeholder="...announcement text goes here..." id="announcement" name="announcement" cols="30" rows="5"></textarea><br />
 				Remaining characters: <span id="count"></span><br /><br />
 				<input type="submit" name="announceSubmit" value="Submit" />&nbsp;<a href="index.php" class="button">Cancel</a>
 			</fieldset>
