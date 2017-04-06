@@ -8,10 +8,10 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	
 	session_start();
 	
-	$dbhost = "localhost";
-	$dbuser = "umslmusic";
-	$dbpass = "cs4500groupproject";
-	$db = "umsl_musicdept";
+	$dbhost = "";
+	$dbuser = "";
+	$dbpass = "";
+	$db = "";
 	
 	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $db);
 	if(mysqli_connect_errno()) {
