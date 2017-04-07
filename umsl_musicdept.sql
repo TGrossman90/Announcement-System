@@ -121,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL,
 	`password` varchar(64) NOT NULL,
+	`mobile` varchar(32) NOT NULL,
 	`userLevel` int(11) NOT NULL DEFAULT '10'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

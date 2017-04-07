@@ -39,6 +39,20 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 							while($array = mysqli_fetch_row($result)) {
 								$username = $array[0];
 								$query = mysqli_query($conn, "INSERT INTO announcements (id, username, priority, subject, author, announcement) VALUES ('NULL', '$username', '$priority', '$subject', '$author', '$announcement')") or die(mysqli_error($conn));
+								
+								$getNum = mysqli_query($conn, "SELECT mobile FROM users WHERE username='$username'") or die(mysqli_error($conn));
+								$num = mysqli_fetch_row($getNum);
+								$mobile = $num[0];
+								
+								$message = '';
+								if($priority == "Urgent") {
+									$message = " URGENT announcement from " . $author . " with the subject of: " . $subject;
+								} else {
+									$message = " You have a new announcement from " . $author . " with the subject of: " . $subject;
+								}
+									
+								mail($mobile, "", $message, "From: admin\r\n");
+								
 							}
 						}
 						
