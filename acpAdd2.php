@@ -38,46 +38,25 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			<fieldset>
 				<center><h2>Authorize Student Users Form</h2></center>
 				<p>Which group would you like to add student(s) too?</p>
-					<?php
-						
-						// Get all groups
-						$result = mysqli_query($conn, "SELECT groupName FROM groups") or die(mysqli_error($conn));
-					
-						$groups = array();
-						while($group = mysqli_fetch_row($result)) {
-							array_push($groups, $group[0]);
-						}
-						sort($groups);
-						
-						// Create an option with every username 
-						foreach($groups as $name) {
-							if($name == ".None"){
-								continue;
-							}
-							echo '<input type="radio" name="group" value="'. $name .'">'. $name .'</option><br />';
-						}
-						
-					?>
-				<br />
-				<p>Select users to add to the group</p>
-				<select name="users[]" size="10" style="width:75%" multiple>
-				<?php
-						// Get all groups
-						$result = mysqli_query($conn, "SELECT username FROM users") or die(mysqli_error($conn));
-					
-						$groups = array();
-						while($group = mysqli_fetch_row($result)) {
-							array_push($groups, $group[0]);
-						}
-						sort($groups);
-						
-						// Create an option with every username 
-						foreach($groups as $name) {
-							echo '<option value="'. $name .'">'. $name .'</option>';
-						}
-				?> 
-				</select> <br /><br />
+				<input type="radio" name="group" value="windsPercussionGroup"> Winds/Percussion <br />
+				<input type="radio" name="group" value="stringGroup"> Strings <br />
+				<input type="radio" name="group" value="vocalGroup"> Vocal <br />
+				<input type="radio" name="group" value="musicEdGroup"> Music Ed <br />
+				<p>Please enter student(s) UMSL E-Mail addresses. NOTE: Seperate all emails by commas</p>
+				<textarea placeholder="sso1@mail.umsl.edu, sso2@mail.umsl.edu, sso3@mail.umsl.edu, sso4@mail.umsl.edu, sso5@mail.umsl.edu" id="students" name="students" cols="25" rows="5"></textarea><br />
 				<input type="submit" name="authedStudentSubmit" value="Submit" />&nbsp;<a href="acp.php" class="button">Cancel</a>
+			</fieldset>
+		</form>
+		
+		<form method="post" action="authFacAdmin.php" name="authFacAdmin">
+			<fieldset>
+				<center><h2>Authorize Faculty/Administrator Users Form</h2></center>
+				<p>Which permission group would you like to add user(s) to?</p>
+				<input type="radio" name="group" value="admin"> Administrator <br />
+				<input type="radio" name="group" value="faculty"> Faculty <br />
+				<p>Please enter only UMSL E-Mail addresses. NOTE: Seperate all emails by commas</p>
+				<textarea placeholder="user1@umsl.edu, user2@umsl.edu, user3@umsl.edu, user4@umsl.edu, user5@umsl.edu" id="facultyAdmin" name="facultyAdmin" cols="25" rows="5"></textarea><br />
+				<input type="submit" name="authedFacAdminSubmit" value="Submit" />&nbsp;<a href="acp.php" class="button">Cancel</a>
 			</fieldset>
 		</form>
 	</body>
