@@ -34,7 +34,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				}
 				
 				// Show links for faculty
-				//echo '<a href="acpAnnounce.php">Send Message To Faculty/Administrators</a><br /><br />';
+				echo '<a href="acpAnnounce.php">Send Message To Faculty/Administrators</a><br /><br />';
 				echo '<center><a href="index.php" class="button">Home</a></center>';
 			} else {
 				

@@ -23,7 +23,6 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			
 			$parentGroup = $_POST['parent'];			
 			$groupName = processText($_POST['groupName']);
-			$groupName = str_replace(" ", "", $groupName);
 			
 			$checkForDupes = mysqli_query($conn, "SELECT groupName FROM groups WHERE groupName='$groupName'") or die(mysqli_error($conn));
 			

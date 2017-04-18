@@ -30,7 +30,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 					
 					foreach($students as $user) {
 						// Insert email into a database that will allow that user to register an account and into their specified group
-						$result = mysqli_query($conn, "INSERT INTO $group (id, username) VALUES ('NULL', '$user')") or die(mysqli_error($conn));
+						$result = mysqli_query($conn, "INSERT INTO $group (id, username) VALUES ('NULL', '$user')") or die(mysqli_error($conn));			
+						echo '<center><p>Added ' . $user . ' into ' . $group . ' </p></center>';
 					}
 				}
 					

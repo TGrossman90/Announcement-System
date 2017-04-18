@@ -27,10 +27,8 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 					if(!empty($_POST['announcement'])) {
 						$groups = $_POST['groups'];
 						$subject = processText($_POST['subject']);
-						$subject = str_replace("'", "''", $subject);
 						$author = processText($_SESSION['username']);
 						$announcement = processText($_POST['announcement']);
-						$announcement = str_replace("'", "''", $announcement);
 						$priority = processText($_POST['priority']);
 
 						// For every group the announcement is sent to

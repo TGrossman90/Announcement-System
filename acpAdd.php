@@ -34,12 +34,13 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 		adding student accounts and placing them in their correct groups,
 		and one for adding staff accounts with different permissions. -->
 		
-		<form method="post" action="authStudents.php" name="authUsers">
+		
+		<form method="post" action="authStudents.php">
 			<fieldset>
 				<center><h2>Authorize Student Users Form</h2></center>
 				<p>Which group would you like to add student(s) too?</p>
 					<?php
-						
+					
 						// Get all groups
 						$result = mysqli_query($conn, "SELECT groupName FROM groups") or die(mysqli_error($conn));
 					
@@ -54,14 +55,16 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 							if($name == ".None"){
 								continue;
 							}
-							echo '<input type="radio" name="group" value="'. $name .'">'. $name .'</option><br />';
+							
+							echo '<input type="radio" name="group" value="'. $name .'">'. $name;
+							echo '<br />';
 						}
 						
 					?>
 				<br />
 				<p>Select users to add to the group</p>
 				<select name="users[]" size="10" style="width:75%" multiple>
-				<?php
+					<?php
 						// Get all groups
 						$result = mysqli_query($conn, "SELECT username FROM users") or die(mysqli_error($conn));
 					
@@ -75,9 +78,9 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 						foreach($groups as $name) {
 							echo '<option value="'. $name .'">'. $name .'</option>';
 						}
-				?> 
-				</select> <br /><br />
-				<input type="submit" name="authedStudentSubmit" value="Submit" />&nbsp;<a href="acp.php" class="button">Cancel</a>
+					?> 
+				</select> <br />
+				<input type="submit" name="submit" value="Submit">&nbsp;<a href="acp.php" class="button">Cancel</a>
 			</fieldset>
 		</form>
 	</body>

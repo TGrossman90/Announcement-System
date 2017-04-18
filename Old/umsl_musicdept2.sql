@@ -34,10 +34,54 @@ INSERT INTO `groups` (`groupName`) VALUES (".None");
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `stringGroup`
+--
+
+CREATE TABLE IF NOT EXISTS `stringGroup` (
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`username` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `windsPercussionGroup`
+--
+
+CREATE TABLE IF NOT EXISTS `windsPercussionGroup` (
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`username` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `vocalGroup`
+--
+
+CREATE TABLE IF NOT EXISTS `vocalGroup` (
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`username` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `departmentWideGroup`
 --
 
 CREATE TABLE IF NOT EXISTS `departmentWideGroup` (
+	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	`username` varchar(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `musicEdGroup`
+--
+
+CREATE TABLE IF NOT EXISTS `musicEdGroup` (
 	`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	`username` varchar(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

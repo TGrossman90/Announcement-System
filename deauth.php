@@ -26,88 +26,35 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				echo "You do not have permission to be here!";
 				header("location:index.php");
 			} 
-
+			
+			// Get all groups
+			$result = mysqli_query($conn, "SELECT groupName FROM groups") or die(mysqli_error($conn));
+			$groups = array();
+			while($group = mysqli_fetch_row($result)) {
+				array_push($groups, $group[0]);
+			}
+			
 			// For every user that is to be removed check for that user in every group.
 			// If found, remove that user from the group. 
 			foreach($_POST['usersToRemove'] as $user) {
-				
-				$result = mysqli_query($conn, "SELECT id FROM windsPercussionGroup WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "windsPercussionGroup = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM windsPercussionGroup WHERE id='$id'");
+				foreach($groups as $grp) {
+					if($grp == ".None") {
+						continue;
+					}
+					
+					$result2 = mysqli_query($conn, "SELECT id FROM $grp WHERE userName='$user'") or die(mysqli_error($conn));
+					if(mysqli_num_rows($result2) > 0) {
+						$iden = mysqli_fetch_row($result2);
+						$id = $iden[0];
+						$delete = mysqli_query($conn, "DELETE FROM $grp WHERE id='$id'") or die(mysqli_error($conn));
+						echo "Removed $user from $grp <br />";
+					}
 				}
-				
-				$result = mysqli_query($conn, "SELECT id FROM vocalGroup WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "vocalGroup = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM vocalGroup WHERE id='$id'");
-				}
-				
-				$result = mysqli_query($conn, "SELECT id FROM users WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "users = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM users WHERE id='$id'");
-				}			
-				
-				$result = mysqli_query($conn, "SELECT id FROM studentUsers WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "studentUsers = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM studentUsers WHERE id='$id'");
-				}
-				
-				$result = mysqli_query($conn, "SELECT id FROM stringGroup WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "stringGroup = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM stringGroup WHERE id='$id'");
-				}
-				
-				$result = mysqli_query($conn, "SELECT id FROM musicEdGroup WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "musicEdGroup = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM musicEdGroup WHERE id='$id'");
-				}
-				
-				$result = mysqli_query($conn, "SELECT id FROM facAdminUsers WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo "facAdminUsers = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM facAdminUsers WHERE id='$id'");
-				}
-				
-				$result = mysqli_query($conn, "SELECT id FROM departmentWideGroup WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo " departmentWideGroup = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM departmentWideGroup WHERE id='$id'");
-				}
-				
-				// Lastly, delete any announcements associated with the deleted user
-				$result = mysqli_query($conn, "SELECT id FROM announcements WHERE username='$user'") or die(mysqli_error($conn));
-				if(mysqli_num_rows($result) != 0) {
-					$num = mysqli_fetch_row($result);
-					$id = $num[0];
-					//echo " announcements = " . $id . "<br />";
-					$delete = mysqli_query($conn, "DELETE FROM announcements WHERE id='$id'");
-				}
-				
-				mysqli_free_result($result);
-				
-				echo '<center>'. $user . ' was removed successfully. <br /></center>';
+					
+				$result = mysqli_query($conn, "DELETE FROM users WHERE username='$user'") or die(mysqli_error($conn));
+				echo "Deleted account with username: $user";
 			}
+			
 			
 			echo '<br /><center><a href="index.php" class="button">Home</a>&nbsp;';
 			echo '<a href="acp.php" class="button">Admin CP</a>';
