@@ -1,5 +1,4 @@
 # Announcement-System
-An announcement system framework
 
 An announcement system designed to be used by the University of Missouri - St. Louis Music Department for easily keeping their many sub-groups of students up-to-date on time sensitive information. 
 
