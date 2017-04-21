@@ -1,7 +1,7 @@
 # Announcement-System
 An announcement system framework
 
-This is a part of a larger project. Essentially a "barebones" framework for testing purposes -- will grow and develop a lot in the next few weeks. 
+An announcement system designed to be used by the University of Missouri - St. Louis Music Department for easily keeping their many sub-groups of students up-to-date on time sensitive information. 
 
 Was written for and tested on: 
 -- Server version: 5.5.54-0+deb8u1
