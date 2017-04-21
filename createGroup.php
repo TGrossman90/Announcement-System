@@ -9,11 +9,11 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>UMSL MUSIC: Creating Group...</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
-		<link rel="stylesheet" href="styles2.css" type="text/css" />
-		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
+		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	</head>  
 	<body>  
-		<div id="main">
+		<div id="main" style="text-align: center;" class="shadow">
+		<img src="/img/umslmusic_logo.png" id="logo" />
 		
 		<?php	
 		
@@ -24,6 +24,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			$parentGroup = $_POST['parent'];			
 			$groupName = processText($_POST['groupName']);
 			$groupName = str_replace(" ", "", $groupName);
+			$groupName = strtolower($groupName);
 			
 			$checkForDupes = mysqli_query($conn, "SELECT groupName FROM groups WHERE groupName='$groupName'") or die(mysqli_error($conn));
 			
@@ -34,12 +35,17 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 					`userName` varchar(32) NOT NULL
 					)";
 					
-				$result = mysqli_query($conn, $query) or die(mysqli_error($conn));
+				$result = mysqliQuery($query);
+				mysqli_free_result($result);
 				
 				if($parentGroup == ".None") {
-					$insert = mysqli_query($conn, "INSERT INTO groups (groupName) VALUES ('$groupName')") or die(mysqli_error($conn));
+					$sql = "INSERT INTO groups (groupName) VALUES ('$groupName')";
+					$insert = mysqliQuery($sql);
+					mysqli_free_result($insert);
 				} else {
-					$insert = mysqli_query($conn, "INSERT INTO groups (groupName, groupParent) VALUES ('$groupName', '$parentGroup')") or die(mysqli_error($conn));
+					$sql = "INSERT INTO groups (groupName, groupParent) VALUES ('$groupName', '$parentGroup')";
+					$insert = mysqliQuery($sql);
+					mysqli_free_result($insert);
 				}
 				
 				echo $groupName . " was created successfully!<br />";
@@ -47,9 +53,9 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				echo "There is already a group named " . $groupName ."! <br />";
 			}
 				
-			echo '<br /><center><a href="index.php" class="button">Home</a>&nbsp;';
-			echo '<a href="addGroup.php" class="button">Add Group</a>&nbsp;';
-			echo '<a href="acp.php" class="button">Admin CP</a></center>';
+			echo '<br /><center><a href="index.php" class="buttonForm">Home</a>&nbsp;';
+			echo '<a href="acpAddGroup.php" class="buttonForm">Add Group</a>&nbsp;';
+			echo '<a href="acp.php" class="buttonForm">Admin CP</a></center>';
 			
 		?>
 		

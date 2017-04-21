@@ -32,4 +32,84 @@ function removeGroup($group) {
 	echo "Deleted " . $group . " successfully <br />";
 }
 
+function mysqliQuery($sqlQuery) {
+	include "dbcontroller.php";
+	
+	$result = mysqli_query($conn, $sqlQuery) or die(mysqli_error($conn));
+	
+	if($result) {
+		return $result;
+	} else {
+		echo '<p>There was a problem! :(</p>';
+	}
+}
+
+function getAllUsers() {
+	// Get all users
+	$sql = "SELECT username FROM users WHERE userLevel='10'";
+	$result = mysqliQuery($sql);
+					
+	$users = array();
+	while($user = mysqli_fetch_row($result)) {
+		array_push($users, $user[0]);
+	}
+	sort($users);
+	
+	return $users;
+}
+
+function getUsersFromGroup($group) {
+	// Get all users
+	$sql = "SELECT userName FROM $group";
+	$result = mysqliQuery($sql);
+					
+	$users = array();
+	while($user = mysqli_fetch_row($result)) {
+		array_push($users, $user[0]);
+	}
+	sort($users);
+	
+	return $users;
+}
+
+function getAllStaffUsers() {
+	$sql = "SELECT username FROM faculty";
+	$result = mysqliQuery($sql);
+	
+	$users = array();
+	while($user = mysqli_fetch_row($result)) {
+		array_push($users, $user[0]);
+	}
+	sort($users);
+	
+	return $users;
+}
+
+function getAllGroups() {
+	// Get all groups
+	$sql = "SELECT groupName FROM groups";
+	$result = mysqliQuery($sql);
+	
+	$groups = array();
+	while($group = mysqli_fetch_row($result)) {						
+		array_push($groups, $group[0]);
+	}
+	sort($groups);
+	
+	return $groups;
+}
+
+function getAllChildrenGroups() {
+	// Get all groups
+	$sql = "SELECT groupName FROM groups WHERE groupParent IS NOT NULL";
+	$result = mysqliQuery($sql);
+
+	$groups = array();
+	while($group = mysqli_fetch_row($result)) {
+		array_push($groups, $group[0]);
+	}
+	sort($groups);
+	
+	return $groups;
+}
 ?>

@@ -8,11 +8,11 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 <html>  
 	<head>  
 		<link rel="stylesheet" href="style.css" type="text/css" />
-		<link rel="stylesheet" href="styles2.css" type="text/css" />
-		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
+		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	</head>  
 	<body>  
-		<div id="main">
+		<div id="main" style="text-align: center;" class="shadow">
+		<img src="/img/umslmusic_logo.png" id="logo" />
 		
 		<?php 
 		
@@ -26,7 +26,9 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			$username = processText($_SESSION['username']);
 			
 			// Retrieve ID associated with the username
-			$result = mysqli_query($conn, "SELECT username FROM announcements WHERE id='$id'") or die(mysqli_error($conn));
+			$sql = "SELECT username FROM announcements WHERE hashkey='$id'";
+			$result = mysqliQuery($sql);
+			
 			$idd = mysqli_fetch_row($result);
 			mysqli_free_result($result);
 			
@@ -40,17 +42,20 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				// If the user wants to delete the announcement, run a query on the database to do so.
 				// If they want to save it, do nothing
 				if($decision == 'delete') {
-					$result = mysqli_query($conn, "DELETE FROM announcements WHERE id='$id' AND username='$username'") or die(mysqli_error($conn));
+					$sql = "DELETE FROM announcements WHERE hashkey='$id' AND username='$username'";
+					$result = mysqliQuery($sql);
+					
 					mysqli_free_result($result);
-					//sleep(2);
 					header("location:announceInbox.php");
 				} 
 				
 				if($decision == "save") {
-					//sleep(2);
+					mysqli_free_result($result);
 					header("location:announceInbox.php");
 				}
 			}
+			
+			mysqli_free_result($result);
 			
 		?>
 		

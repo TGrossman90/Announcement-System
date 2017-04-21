@@ -9,12 +9,17 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>
 		<title>UMSL MUSIC: Registration</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
-		<link rel="stylesheet" href="styles2.css" type="text/css" />
-		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
+		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+		<script>
+			function checkbox() {
+				var checked = document.getElementById("optOut").value;
+			}
+		</script>
 	</head>
 	<body>  
-		<div id="main">
-		
+		<div id="main" class="shadow">
+		<div style="text-align: center;">
+		<img src="/img/umslmusic_logo.png" id="logo" />
 		<?php
 		
 			//Includes
@@ -25,40 +30,46 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			$usernameError = $emailError = $passwordError = $passwordVerifyError = $phoneNumberError = $phoneCarrierError = "";
 			$username = $password = "";
 			$userFlag = $passwordFlag = "0";
+			$optOutMessage = "Are you sure you want to opt out of text alerts? (not recommended unless there are mobile plan restrictions)";
 
 			// Since the register form is on this same page, check to see if a form was submitted
 			// or if this is a fresh viewing of the page
 			if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				
 				// If a registration attempt is currently underway check for matching passwords
-				if(!empty($_POST['username']) && !empty($_POST['password']) && ($_POST["mobile_carrier"] != "none") && !empty($_POST["mobile_number"])) {
+				if(!empty($_POST['username']) && !empty($_POST['password'])) {
 					if(processText($_POST['password']) != processText($_POST['passwordVerify'])) {
 						$passwordError = "Your passwords do not match";
+						$passwordVerifyError = "Your passwords do not match";
 					
 					// If the passwords match, hash the password and check if the username has been registered yet
 					} else {
 						$username = processText($_POST['username']);
+						$username = strtolower($username);
 						$password = processText($_POST['password']);
 						$carrier = processText($_POST["mobile_carrier"]);
 						$number = processText($_POST["mobile_number"]);
 						$number = preg_replace("/[^0-9]/", "", $number);
 						$hash = password_hash($password, PASSWORD_BCRYPT);
+						$optout = $_POST['optout'];
 						
-						$checkuser = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'") or die(mysqli_error($conn));
+						$sql = "SELECT * FROM users WHERE username = '$username'";
+						$checkuser = mysqliQuery($sql);
 						
 						// If the username has been registered...
 						if(mysqli_num_rows($checkuser) != 0 ) {
 							$usernameError = "That email has already registered";
-							mysqli_free_result($checkuser);
 						
 						// If the username has not been registered, make sure that the user has permission to register in the first place
 						} else {
-							
-							//if(preg_match("/^[0-9]{3}[0-9]{4}[0-9]{4}$/", $number)) {
-							//	$phoneNumberError = "You must enter a valid phone number!";
-							//	
-							//} else {
-								 
+							if(!empty($_POST['optout']) && (($_POST['mobile_carrier'] == "none") || empty($_POST['mobile_number']))) {
+								if($_POST['mobile_carrier'] == "none") {
+									$phoneCarrierError = "You must select a carrier";
+								}
+								if(empty($_POST['mobile_number'])) {
+									$phoneNumberError = "You must enter your number";
+								}
+							} else {
 								// Carriers listed by alphabetical company names from: http://en.wikipedia.org/wiki/List_of_SMS_gateways
 								$mobile = '';
 								if ($carrier == 'aircel'){
@@ -408,22 +419,61 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 										// echo 'Failed to find a carrier!';
 										// die;
 								}
-	 
-								// Echo the data for testing purposes
-								echo 'Number: '.$number.'<br />';
-								echo 'Carrier Code: '.$carrier.'<br />';
 								
-								$registry = mysqli_query($conn, "INSERT INTO users (id, username, password, mobile) VALUES ('NULL', '$username', '$hash', '$mobile')") or die(mysqli_error($conn));
-								$addToDepartmentGroup = mysqli_query($conn, "INSERT INTO departmentWideGroup (id, username) VALUES ('NULL', '$username')") or die(mysqli_error($conn));
+								if(empty($_POST['optout'])) {		
+									$time = time();
+									$verificationHash = hash('md5', $username . $time);
+									$optstatus = 0;
 									
-								mysqli_free_result($registry);
-								mysqli_free_result($addToDepartmentGroup);
-								
-								header("location:index.php");
-								
-								
+									$sql = "INSERT INTO users (id, username, password, mobile, optstatus, verification) VALUES ('NULL', '$username', '$hash', '$mobile', '$optstatus', '$verificationHash')";
+									$registry = mysqliQuery($sql);
+									$sql = "INSERT INTO allusers (id, username) VALUES ('NULL', '$username')";
+									$addToAllUsers = mysqliQuery($sql);
+									
+									// To send HTML mail, the Content-type header must be set
+									$headers  = 'MIME-Version: 1.0' . "\r\n";
+									$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+									$from = 'admin@thedreamteam.me';
+									$headers .= 'From: '.$from."\r\n".
+										'X-Mailer: PHP/' . phpversion();
+									
+									$usernameHash = hash('md5', $username);
+									$url = 'http://thedreamteam.me/acctVrfy.php?id='.$verificationHash;
+									$message = '<html><body>';
+									$message .= 'Thank you for taking the time to register with the UMSL Music Department Announcement System!<br />';
+									$message .= '<br />Please click the following link to verify your account and complete the registration.<br />';
+									$message .= '<a href="'.$url.'"> '.$url.' </a><br />';
+									$message .= '<br />Thank you,';
+									$message .= '<br />Music Dept Staff';
+									$message .= '</body></html>';
+									mail($username, "Please Verify Your Account", $message, $headers);
+										
+									mysqli_free_result($registry);
+									mysqli_free_result($addToAllUsers);
+									
+									header("location: acctVrfy.php");
+								} else {
+									$time = time();
+									$verificationHash = hash('md5', $username . $number . $carrier . $time);
+									$optstatus = 1;
+									
+									$sql = "INSERT INTO users (id, username, password, mobile, optstatus, verification) VALUES ('NULL', '$username', '$hash', '$mobile', '$optstatus', '$verificationHash')";
+									$registry = mysqliQuery($sql);
+									$sql = "INSERT INTO allusers (id, username) VALUES ('NULL', '$username')";
+									$addToAllUsers = mysqliQuery($sql);
+									
+									$url = 'http://thedreamteam.me/acctVrfy.php?id='.$verificationHash;
+									mail($mobile, "Verify Your Account", $url, "From: admin");
+										
+									mysqli_free_result($registry);
+									mysqli_free_result($addToAllUsers);
+									
+									header("location: acctVrfy.php");
+								}
 							}
 						}
+						
+						mysqli_free_result($checkuser);
 					}
 				
 				// Display errors next to the incorrectly filled out forms
@@ -436,22 +486,19 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 						$usernameError = "Password is a required field!";
 					}
 					
-					if ($_POST["mobile_carrier"] == 'none') {
-						$phoneCarrierError = "Mobile Carrier is a required field!";
-					}
-					
-					if (empty($_POST["mobile_number"])) {
-						$phoneNumberError = "Mobile Number is a required field!";
+					if (!empty($_POST["optout"]) && (empty($_POST['mobile_carrier']) || empty($_POST['mobile_number']))) {
+						$phoneNumberError = "If you're not opting out of the text alerts, you must enter your phone carrier and number!";
 					}
 				}
-			
+			}
 				
 			
 		?>
 		
 		<!-- The registration form -->
 		
-		<p><span class="error">* denotes a required field</span></p>
+		<p><span class="error">* denotes a required field</span><br />
+		<span class="error">** is required if opting in</span></p>
 		<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">  
 			<label for="username">Username (USML Email): </label> <input type="text" name="username">
 			<span class="error">* <?php echo $usernameError; ?></span>
@@ -463,7 +510,10 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			
 			<label for="passwordVerify">Re-enter Password: </label> <input type="password" name="passwordVerify">
 			<span class="error">* <?php echo $passwordVerifyError; ?></span>
-			<br /><br />
+			<br /><br /><br />
+			
+			<input type="checkbox" name="optout" class="checkStyle" id="optout" onclick="javascript:if (confirm('<?php echo $optOutMessage; ?>'))
+				{document.getElementById('optout').checked = false;}else{document.getElementById('optout').checked = true;}; " checked /> Opt In To Text Alerts <br />
 			
 			<p>Mobile Carrier:
 			<select name="mobile_carrier" id="mobile_carrier" onChange="selected()">
@@ -594,16 +644,15 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 					</optgroup>
 					-->
 			</select>
-			<span class="error">* <?php echo $phoneCarrierError; ?></span></p>
-			<br />
+			<span class="error">** <?php echo $phoneCarrierError; ?></span></p>
 			<p>Mobile Number:
 			<input type="text" id="mobile_number" name="mobile_number" maxlength="20" onKeyPress="return numbersonly(event, false)" /> 
-			<span class="error">* <?php echo $phoneNumberError; ?></span></p>
+			<span class="error">** <?php echo $phoneNumberError; ?></span></p>
 			<br />
 
 			<span class="error">WARNING: For the sake of security <u<b>DO NOT</u></b> use the password you use to log into MyGateway, MyView, or any other UM SSO systems.</span>
 			<br /><br />
-			<input type="submit" name="submit" value="Submit">&nbsp;<a href="index.php" class="button">Cancel</a>
+			<input type="submit" name="submit" value="Submit" class="buttonForm">&nbsp;<a href="index.php" class="buttonForm">Cancel</a>
 		</form>
 		
 	</body>

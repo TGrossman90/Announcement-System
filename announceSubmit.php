@@ -9,11 +9,11 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>UMSL MUSIC: Submit Announcement</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
-		<link rel="stylesheet" href="styles2.css" type="text/css" />
-		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
+		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	</head>  
 	<body>  
-		<div id="main">
+		<div id="main" style="text-align: center;" class="shadow">
+		<img src="/img/umslmusic_logo.png" id="logo" />
 		
 		<?php
 		
@@ -31,47 +31,163 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 						$author = processText($_SESSION['username']);
 						$announcement = processText($_POST['announcement']);
 						$announcement = str_replace("'", "''", $announcement);
-						$priority = processText($_POST['priority']);
 
 						// For every group the announcement is sent to
 						// retrieve all usernames and create announcements for them
 						foreach($groups as $group) {	
-						
-							$result = mysqli_query($conn, "SELECT username FROM $group") or die(mysqli_error($conn));
-							while($array = mysqli_fetch_row($result)) {
-								$username = $array[0];
-								$query = mysqli_query($conn, "INSERT INTO announcements (id, username, priority, subject, author, announcement) VALUES ('NULL', '$username', '$priority', '$subject', '$author', '$announcement')") or die(mysqli_error($conn));
-								
-								$getNum = mysqli_query($conn, "SELECT mobile FROM users WHERE username='$username'") or die(mysqli_error($conn));
-								$num = mysqli_fetch_row($getNum);
-								$mobile = $num[0];
-								
-								$message = '';
-								if($priority == "Urgent") {
-									$message = " URGENT announcement from " . $author . " with the subject of: " . $subject;
-								} else {
-									$message = " You have a new announcement from " . $author . " with the subject of: " . $subject;
+							$sql = "SELECT groupParent FROM groups WHERE groupName='$group'";
+							$result = mysqliQuery($sql);
+							
+							$isParent = mysqli_fetch_row($result);
+							if(is_null($isParent[0]) && $group != "allusers") {
+								$sql = "SELECT groupName FROM groups WHERE groupParent='$group'";
+								$getChildren = mysqliQuery($sql);
+					
+								$grps = array();
+								while($grp = mysqli_fetch_row($getChildren)) {
+									array_push($grps, $grp[0]);
 								}
-									
-								mail($mobile, "", $message, "From: admin\r\n");
 								
+								mysqli_free_result($getChildren);
+								
+								foreach($grps as $grp) {
+									$sql = "SELECT username FROM $grp";
+									$result = mysqliQuery($sql);
+									
+									while($array = mysqli_fetch_row($result)) {
+										$username = $array[0];
+										
+										$sql = "SELECT optstatus FROM users WHERE username='$username'";
+										$resultStatus = mysqliQuery($sql);
+										$status = mysqli_fetch_row($resultStatus);
+										$optstatus = $status[0];
+										
+										if($optstatus == 1) {
+											$time = time();
+											$hashkey = hash('md5', $subject . $username . $time);
+											$url = "http://thedreamteam.me/read.php?id=" . $hashkey;
+											$sql = "INSERT INTO announcements (id, username, subject, author, announcement, hashkey) VALUES ('NULL', '$username', '$subject', '$author', '$announcement', '$hashkey')";
+											$query = mysqliQuery($sql);
+											
+											$sql = "SELECT mobile FROM users WHERE username='$username'";
+											$getNum = mysqliQuery($sql);
+											$num = mysqli_fetch_row($getNum);
+											$mobile = $num[0];
+											
+											mail($mobile, $subject, $url, "From: admin");
+											echo 'Sent announcement to: ' . $grp . '<br />';
+											mysqli_free_result($getNum);
+										} else {
+											$time = time();
+											$hashkey = hash('md5', $subject . $username . $time);
+											$url = "http://thedreamteam.me/read.php?id=" . $hashkey;
+											$sql = "INSERT INTO announcements (id, username, subject, author, announcement, hashkey) VALUES ('NULL', '$username', '$subject', '$author', '$announcement', '$hashkey')";
+											$query = mysqliQuery($sql);
+
+											$headers  = 'MIME-Version: 1.0' . "\r\n";
+											$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+											$from = 'admin@thedreamteam.me';
+											$headers .= 'From: '.$from."\r\n".
+												'X-Mailer: PHP/' . phpversion();
+												
+											$message = '<html><body>';
+											$message .= 'Hello,<br />';
+											$message .= '<br />This message is to inform you that you have a new announcement waiting to be viewed.<br />';
+											$message .= '<br />You can view the announcement by clicking the following link:<br />';
+											$message .= '<a href="'.$url.'"> '.$url.' </a><br />';
+											$message .= '<br />Thank you,';
+											$message .= '<br />Music Dept Staff';
+											$message .= '</body></html>';
+											mail($username, "You Have a New Announcement!", $message, $headers);
+											echo 'Sent announcement to: ' . $grp . '<br />';
+											
+											mysqli_free_result($query);
+										}
+										
+										mysqli_free_result($resultStatus);
+									}
+									
+									mysqli_free_result($result);
+								}
+							} else {
+								$sql = "SELECT username FROM $group";
+								$result = mysqliQuery($sql);
+								
+								while($array = mysqli_fetch_row($result)) {
+									$username = $array[0];
+									
+									$sql = "SELECT optstatus FROM users WHERE username='$username'";
+									$resultStatus = mysqliQuery($sql);
+									$status = mysqli_fetch_row($resultStatus);
+									$optstatus = $status[0];
+									
+									if($optstatus == 1) {
+										$time = time();
+										$hashkey = hash('md5', $subject . $username . $time);
+										$url = "http://thedreamteam.me/read.php?id=" . $hashkey;
+										$sql = "INSERT INTO announcements (id, username, subject, author, announcement, hashkey) VALUES ('NULL', '$username', '$subject', '$author', '$announcement', '$hashkey')";
+										$query = mysqliQuery($sql);
+										
+										$sql = "SELECT mobile FROM users WHERE username='$username'";
+										$getNum = mysqliQuery($sql);
+										$num = mysqli_fetch_row($getNum);
+										$mobile = $num[0];
+										
+										mail($mobile, $subject, $url, "From: admin");
+										mysqli_free_result($query);
+									} else {
+										$time = time();
+										$hashkey = hash('md5', $subject . $username . $time);
+										$url = "http://thedreamteam.me/read.php?id=" . $hashkey;
+										$sql = "INSERT INTO announcements (id, username, subject, author, announcement, hashkey) VALUES ('NULL', '$username', '$subject', '$author', '$announcement', '$hashkey')";
+										$query = mysqliQuery($sql);
+										
+										$headers  = 'MIME-Version: 1.0' . "\r\n";
+										$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+										$from = 'admin@thedreamteam.me';
+										$headers .= 'From: '.$from."\r\n".
+											'X-Mailer: PHP/' . phpversion();
+											
+										$message = '<html><body>';
+										$message .= 'Hello,<br />';
+										$message .= '<br />This message is to inform you that you have a new announcement waiting to be viewed.<br />';
+										$message .= '<br />You can view the announcement by clicking the following link:<br />';
+										$message .= '<a href="'.$url.'"> '.$url.' </a><br />';
+										$message .= '<br />Thank you,';
+										$message .= '<br />Music Dept Staff';
+										$message .= '</body></html>';
+										mail($username, "You Have a New Announcement!", $message, $headers);
+										
+										mysqli_free_result($query);
+									}
+									
+									echo 'Sent announcement to: ' . $group . '<br />';
+									mysqli_free_result($resultStatus);
+								}
+								
+								mysqli_free_result($result);
 							}
+							
+							mysqli_free_result($result);
 						}
 						
 						echo '<center>Announcement sent successfully!</center><br />';
-						echo '<br /><center><a href="announceCreate.php" class="button">Send Another</a>';
-						echo '<br /><center><a href="index.php" class="button">Home</a></center>';
+						echo '<br /><center><a href="announceCreate.php" class="buttonForm">Send Another</a>';
+						echo '<br /><center><a href="index.php" class="buttonForm">Home</a></center>';
 						
 					} else {
-						echo "There was a problem with posting the announcement";
+						echo "ERROR: You have to enter an announcement";
+						echo '<br /><center><a href="announceCreate.php" class="buttonForm">Go back</a></center>';
 					}
 					
 				} else {
-					echo "There was a problem with getting the subject";
+					echo "ERROR: You have to enter a subject";
+					echo '<br /><center><a href="announceCreate.php" class="buttonForm">Go back</a></center>';
 				}
 				
 			} else {
-				echo "There was a problem with retrieving the groups";
+				echo "ERROR: You have to select a group";
+				echo '<br /><center><a href="announceCreate.php" class="buttonForm">Go back</a></center>';
 			}
 			
 		?>

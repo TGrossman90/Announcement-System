@@ -9,8 +9,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	<head>  
 		<title>UMSL MUSIC: Read Announcement</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
-		<link rel="stylesheet" href="styles2.css" type="text/css" />
-		<meta name="viewport" content="width=device-width,height=device-height,initial-scale=0.9"/>
+		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 		<style>
 		th {
 			width: 320px
@@ -18,7 +17,10 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 		</style>
 	</head>  
 	<body>  
-		<div id="main">
+		<div id="main" class="shadow">
+		<div style="text-align: center;">
+			<img src="/img/umslmusic_logo.png" id="logo" style="text-align: center;" />
+		</div>
 		
 		<?php 
 		
@@ -28,12 +30,15 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 			
 			// Gets the announcement ID passed by URL
 			$id = processText($_GET['id']);
-			$result = mysqli_query($conn, "SELECT username FROM announcements WHERE id='$id'") or die(mysqli_error($conn));
-			$idd = mysqli_fetch_row($result);
+			$username = $_SESSION['username'];
+			$sql = "SELECT username FROM announcements WHERE hashkey='$id' AND username='$username'";
+			$result = mysqliQuery($sql);
 			
 			// Verify user is allowed to read the announcement
-			if($idd[0] == $_SESSION['username']) {
-				$getannounce = mysqli_query($conn, "SELECT author, subject, dateSent, announcement FROM announcements WHERE id='$id'") or die(mysqli_error($conn));
+			if(mysqli_num_rows($result) == 1) {
+				$sql = "SELECT author, subject, dateSent, announcement FROM announcements WHERE hashkey='$id'";
+				$getannounce = mysqliQuery($sql);
+				
 				$announcement = mysqli_fetch_row($getannounce);
 				mysqli_free_result($getannounce);
 				
@@ -41,21 +46,26 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 				$author = explode('@', $announcement[0]);
 				echo '<h2><center>Inbox</center></h2>';
 				echo '
-					<table>
+					<table style="width:100%; margin: 0 auto;">
 						<tr>
-							<th width="400px">Sender: '.$author[0]."<br />".'Subject: '.$announcement[1]."<br />".'Date: '.date('m/j g:iA', strtotime($announcement[2]))."<br />".'</th>
+							<th>Sender: '. $author[0] ."<br />".'Subject: ' . $announcement[1] . '<br />' . 'Date: '.date('m/j g:iA', strtotime($announcement[2])).'<br /><br /></th>
 						</tr>
 						<tr>
-							<td>'.$announcement[3].'</td>
+							<td>' . $announcement[3] . '</td>
 						</tr>
-						<tr>
-							<td align="center"><a href="announceDecision.php?decision=save&id='.$id.'" class="button">Save</a> <a href="announceDecision.php?decision=delete&id='.$id.'" class="button">Delete</a></td>
-						</tr>
-					</table>';
+					</table>
+					<div style="text-align: center;">
+						<br />
+						<a href="announceDecision.php?decision=save&id='.$id.'" class="buttonForm">Save</a> <a href="announceDecision.php?decision=delete&id='.$id.'" class="buttonForm">Delete</a>
+					</div>';
 			} else {
+				echo '<div style="text-align: center;">';
 				echo 'There are no messages here. <br />';
-				echo '<a href="announceInbox.php class="button"">Return to Inbox</a>';
+				echo '<a href="announceInbox.php" class="buttonForm">Return to Inbox</a>';
+				echo '</div>';
 			}
+			
+			mysqli_free_result($result);
 			
 		?>
 		
