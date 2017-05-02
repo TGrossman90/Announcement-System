@@ -7,33 +7,34 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 <!DOCTYPE HTML> 
 <html>  
 	<head>  
-		<title>UMSL MUSIC: Deleting Group(s)...</title>
+		<title>UMSL Music: Deleting Group(s)...</title>
 		<link rel="stylesheet" href="style.css" type="text/css" />
 		<meta name="viewport" content="width=device-width,height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
 	</head>  
 	<body>  
 		<div id="main" style="text-align: center;" class="shadow">
-		<img src="/img/umslmusic_logo.png" id="logo" />
-		
-		<?php	
-		
-			// Includes
-			include "functions.php";
-			include "dbcontroller.php";
+			<img src="/img/umslmusic_logo.png" id="logo" /> <br />
 			
-			$groupName = processText($_POST['group']);
+			<?php	
 			
-			if($groupName != "NULL" || $groupName == "allusers") {
-				removeGroup($groupName);
-			} else {
-				echo '<p>You must select a table to delete!</p>';
-			}
+				// Includes
+				include "functions.php";
+				include "systemConfiguration.php";
+				
+				$groupName = processText($_POST['group']);
+				
+				if($groupName != "NULL" || $groupName == "allusers") {
+					removeGroup($groupName);
+				} else {
+					echo '<p>You must select a table to delete!</p>';
+				}
 
-			echo '<br /><a href="index.php" class="buttonForm">Home</a>&nbsp;';
-			echo '<a href="acpRemoveGroup.php" class="buttonForm">Delete Group</a>&nbsp;';
-			echo '<a href="acp.php" class="buttonForm">Admin CP</a>';
-			
-		?>
+				echo '<br /><a href="index.php" class="buttonForm">Home</a>&nbsp;';
+				echo '<a href="acpRemoveGroup.php" class="buttonForm">Delete Group</a>&nbsp;';
+				echo '<a href="acp.php" class="buttonForm">Admin CP</a>';
+				
+			?>
 		
+		</div>
 	</body>
 </html>

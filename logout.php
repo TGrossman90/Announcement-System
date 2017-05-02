@@ -6,7 +6,7 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 
 <?php
 
-	include "dbcontroller.php";
+	include "systemConfiguration.php";
 	
 	$_SESSION = array(); 
 	session_destroy(); 

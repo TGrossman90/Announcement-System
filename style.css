@@ -115,6 +115,34 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 	border-radius: 45%;
 }
 
+.buttonFormMini {
+    background-color: #ff9900;
+    border: 1px solid #666666;
+    color: #222222;
+    padding: 4px;
+	width: 75px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 8px;
+    cursor: pointer;
+	-moz-box-shadow: 1px 1px 1px 1px #333;
+	-webkit-box-shadow: 1px 1px 1px 1px #333;
+	box-shadow: 1px 1px 1px 1px #333;
+	
+	border-radius: 45%;
+}
+
+.buttonFormMini:hover {
+    background-color: #dd7700;
+	border: 1px solid #000;
+    color: #000000;
+	-moz-box-shadow: 0px 0px 0px 0px #333;
+	-webkit-box-shadow: 0px 0px 0px 0px #333;
+	box-shadow: 0px 0px 0px 0px #333;
+}
+
 .checkStyle {
 	width: 30px;
 	height: 30px;
@@ -260,6 +288,7 @@ table {
 td {
     border-top: thin solid; 
     border-bottom: thin solid;
+	font-size: 18px;
 }
 
 td:first-child {
@@ -272,5 +301,13 @@ td:last-child {
 
 th {
 	height:20px;
-	width: 120px;
+	width: 30%;
+	font-size: 20px;
+	
+	-moz-box-shadow: 1px 1px 1px 1px #333;
+	-webkit-box-shadow: 1px 1px 1px 1px #333;
+	box-shadow: 1px 1px 1px 1px #333;
+	padding: 12px;
+	position: center;
+	background-color: #aa0000;
 }

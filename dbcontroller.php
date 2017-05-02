@@ -5,14 +5,10 @@ Copyright © 2017 Tom Grossman. All Rights Reserved
 -->
 
 <?php
-	session_start();
 	
-	$dbhost = "";
-	$dbuser = "";
-	$dbpass = "";
-	$db = "";
+	include "systemConfiguration.php";
 	
-	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $db);
+	$conn = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 	if(mysqli_connect_errno()) {
 		die("Connection Failed: " . mysqli_connect_error());
 	}
